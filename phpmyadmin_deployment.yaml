@@ -1,0 +1,39 @@
+---
+# deployment of phpmyadmin
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: phpmyadmin-deployment
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: phpmyadmin
+ template:
+  metadata:
+   labels:
+    app: phpmyadmin
+  spec:
+    containers:
+     - name: phpmyadmin
+       image: phpmyadmin
+       env:
+        - name: PMA_HOST
+          value: mysql.default
+       ports:
+        - containerPort: 80
+          name: phpmyadmin 
+---
+# service for phpmyadmin
+apiVersion: v1
+kind: Service
+metadata:
+ name: phpmyadmin-service
+spec:
+ selector:
+    app: phpmyadmin
+ ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30008
+ type: NodePort                   
